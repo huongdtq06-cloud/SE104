@@ -1,4 +1,4 @@
-namespace BackendAPI.BE.BLL.Models;
+namespace BackendAPI.BE.API.DTO;
 
 public class TestItem
 {

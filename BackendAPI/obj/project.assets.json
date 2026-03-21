@@ -4749,11 +4749,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\UIT\\SE104\\Project\\BackendAPI\\BackendAPI.csproj",
+      "projectUniqueName": "D:\\UIT\\SE104\\Project\\BackendAPI\\BackendAPI.csproj",
       "projectName": "BackendAPI",
-      "projectPath": "d:\\UIT\\SE104\\Project\\BackendAPI\\BackendAPI.csproj",
+      "projectPath": "D:\\UIT\\SE104\\Project\\BackendAPI\\BackendAPI.csproj",
       "packagesPath": "C:\\Users\\huong\\.nuget\\packages\\",
-      "outputPath": "d:\\UIT\\SE104\\Project\\BackendAPI\\obj\\",
+      "outputPath": "D:\\UIT\\SE104\\Project\\BackendAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\huong\\AppData\\Roaming\\NuGet\\NuGet.Config",

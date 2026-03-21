@@ -1,6 +1,7 @@
 using BackendAPI.BE.BLL.Interfaces;
-using BackendAPI.BE.BLL.Models;
+using BackendAPI.BE.API.DTO;
 using Microsoft.AspNetCore.Mvc;
+using TestItemModel = BackendAPI.BE.DAL.Entities.TestItem;
 
 namespace BackendAPI.Controllers;
 
@@ -18,7 +19,8 @@ public class TestItemsController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<TestItem>> GetAll()
     {
-        return await _repository.GetAllAsync();
+        var items = await _repository.GetAllAsync();
+        return items.Select(MapToDto);
     }
 
     [HttpGet("{id}")]
@@ -29,14 +31,14 @@ public class TestItemsController : ControllerBase
         if (item == null)
             return NotFound();
 
-        return item;
+        return MapToDto(item);
     }
 
     [HttpPost]
     public async Task<ActionResult<TestItem>> Create(TestItem model)
     {
-        var item = await _repository.AddAsync(model);
-        return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+        var item = await _repository.AddAsync(MapToModel(model));
+        return CreatedAtAction(nameof(GetById), new { id = item.Id }, MapToDto(item));
     }
 
     [HttpPut("{id}")]
@@ -45,7 +47,7 @@ public class TestItemsController : ControllerBase
         if (id != model.Id)
             return BadRequest();
 
-        await _repository.UpdateAsync(model);
+        await _repository.UpdateAsync(MapToModel(model));
         return NoContent();
     }
 
@@ -55,4 +57,16 @@ public class TestItemsController : ControllerBase
         await _repository.DeleteAsync(id);
         return NoContent();
     }
+
+    private static TestItem MapToDto(TestItemModel model) => new()
+    {
+        Id = model.Id,
+        Name = model.Name
+    };
+
+    private static TestItemModel MapToModel(TestItem dto) => new()
+    {
+        Id = dto.Id,
+        Name = dto.Name
+    };
 }

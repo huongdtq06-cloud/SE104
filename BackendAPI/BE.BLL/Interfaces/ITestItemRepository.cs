@@ -1,4 +1,4 @@
-using BackendAPI.BE.BLL.Models;
+using BackendAPI.BE.DAL.Entities;
 
 namespace BackendAPI.BE.BLL.Interfaces;
 

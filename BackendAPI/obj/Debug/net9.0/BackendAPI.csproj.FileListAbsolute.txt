@@ -151,3 +151,4 @@ d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\refint\BackendAPI.dll
 d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\BackendAPI.pdb
 d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\BackendAPI.genruntimeconfig.cache
 d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\ref\BackendAPI.dll
+d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\BackendAPI.sourcelink.json
