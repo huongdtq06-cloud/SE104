@@ -24,6 +24,7 @@ public class AppDbContext : DbContext
     public DbSet<ReceiptItem> receiptItems { get; set; }
     public DbSet<DeliveryItem> deliveryItems { get; set; }
 
+public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -122,5 +123,16 @@ public class AppDbContext : DbContext
     .HasOne(i => i.User)                   
     .WithMany(u => u.InfractionTickets)    
     .HasForeignKey(i => i.UserId);
+
+    
+    // =======================
+    // PasswordResetToken - User
+    // =======================
+    modelBuilder.Entity<PasswordResetToken>()
+        .HasOne(p => p.User)
+        .WithMany(u => u.PasswordResetTokens)
+        .HasForeignKey(p => p.UserId);
     }
+
+    
 }

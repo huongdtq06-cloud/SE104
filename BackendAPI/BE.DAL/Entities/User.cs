@@ -24,6 +24,7 @@ public class User
     // navigation
     public List<Shift> Shifts { get; set; }
     public List<Note> Notes { get; set; }
+    public List<PasswordResetToken> PasswordResetTokens { get; set; }
     public List<InfractionTicket> InfractionTickets { get; set; }
     
     

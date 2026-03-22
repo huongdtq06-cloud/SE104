@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\UIT\\SE104\\Project\\BackendAPI\\BackendAPI.csproj": {}
+    "D:\\UIT\\SE104\\project1\\SE104\\BackendAPI\\BackendAPI.csproj": {}
   },
   "projects": {
-    "D:\\UIT\\SE104\\Project\\BackendAPI\\BackendAPI.csproj": {
+    "D:\\UIT\\SE104\\project1\\SE104\\BackendAPI\\BackendAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\UIT\\SE104\\Project\\BackendAPI\\BackendAPI.csproj",
+        "projectUniqueName": "D:\\UIT\\SE104\\project1\\SE104\\BackendAPI\\BackendAPI.csproj",
         "projectName": "BackendAPI",
-        "projectPath": "D:\\UIT\\SE104\\Project\\BackendAPI\\BackendAPI.csproj",
+        "projectPath": "D:\\UIT\\SE104\\project1\\SE104\\BackendAPI\\BackendAPI.csproj",
         "packagesPath": "C:\\Users\\huong\\.nuget\\packages\\",
-        "outputPath": "D:\\UIT\\SE104\\Project\\BackendAPI\\obj\\",
+        "outputPath": "D:\\UIT\\SE104\\project1\\SE104\\BackendAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\huong\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -58,6 +58,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.1.0, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.15.1, )"
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
