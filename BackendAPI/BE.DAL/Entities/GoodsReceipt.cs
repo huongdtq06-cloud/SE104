@@ -10,7 +10,7 @@ public class GoodsReceipt: Note
 {
     public string qualityCheckStatus { get; set; }
     public DateTime Date { get; set; }
-    public string SupplierId { get; set; } // FK
+    public int SupplierId { get; set; } // FK
     public int StockQuantity { get; set; }
     public int DefectiveQuantity { get; set; }
 

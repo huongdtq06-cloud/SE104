@@ -1,7 +1,7 @@
 namespace BackendAPI.BE.DAL.Entities;
 public class Supplier
 {
-    public string SupplierId { get; set; }      
+    public int SupplierId { get; set; }      
 
     public string Name { get; set; }
     public string phone { get; set; }

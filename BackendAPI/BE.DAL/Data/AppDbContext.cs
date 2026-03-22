@@ -10,7 +10,6 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<TestItem> TestItems { get; set; }
-    public DbSet<Staff> Staffs { get; set; }
     public DbSet<Shift> Shifts { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<InfractionTicket> InfractionTickets { get; set; }
@@ -30,15 +29,7 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-    // =======================
-    // User - Staff (1-1)
-    // =======================
-    modelBuilder.Entity<Staff>()
-        .HasKey(s => s.UserId);
-    modelBuilder.Entity<Staff>()
-        .HasOne(s=> s.User)
-        .WithOne()
-        .HasForeignKey<Staff>(s => s.UserId);
+
 
     // =======================
     // ProductSupplier (N-N)
@@ -66,12 +57,12 @@ public class AppDbContext : DbContext
         .HasValue<DamageNote>("DamageNote");
 
     // =======================
-    // Note - Staff (1-n)
+    // Note - User (1-n)
     // =======================
     modelBuilder.Entity<Note>()
-        .HasOne<Staff>()
+        .HasOne(n => n.User)
         .WithMany()
-        .HasForeignKey(n => n.StaffId)
+        .HasForeignKey(n => n.UserId)
         .OnDelete(DeleteBehavior.Restrict);
 
     // =======================
@@ -80,7 +71,7 @@ public class AppDbContext : DbContext
     modelBuilder.Entity<ReceiptItem>()
         .HasOne(re => re.GoodReceipt)
         .WithMany(gr => gr.ReceiptItems)
-        .HasForeignKey(re => re.NoteID)
+        .HasForeignKey(re => re.NoteId)
         .OnDelete(DeleteBehavior.Cascade);
 
     modelBuilder.Entity<ReceiptItem>()
@@ -94,7 +85,7 @@ public class AppDbContext : DbContext
     modelBuilder.Entity<DeliveryItem>()
         .HasOne(de => de.DeliveryNote)
         .WithMany(dn => dn.DeliveryItems)
-        .HasForeignKey(de => de.NoteID)
+        .HasForeignKey(de => de.NoteId)
         .OnDelete(DeleteBehavior.Cascade);
 
     modelBuilder.Entity<DeliveryItem>()
@@ -108,7 +99,7 @@ public class AppDbContext : DbContext
     modelBuilder.Entity<DamageItem>()
         .HasOne(da => da.DamageNote)
         .WithMany( dn => dn.DamageItems)
-        .HasForeignKey(da => da.NoteID)
+        .HasForeignKey(da => da.NoteId)
         .OnDelete(DeleteBehavior.Cascade);
 
     modelBuilder.Entity<DamageItem>()
@@ -117,19 +108,19 @@ public class AppDbContext : DbContext
         .HasForeignKey(di => di.ProductId);
 
     // =======================
-    // Shift - Staff
+    // Shift - User
     // =======================
     modelBuilder.Entity<Shift>()
-        .HasOne(s=> s.Staff)
-        .WithMany(st=> st.Shifts)
-        .HasForeignKey(s => s.StaffId);
+        .HasOne(s=> s.User)
+        .WithMany(u=> u.Shifts)
+        .HasForeignKey(s => s.UserId);
 
     // =======================
-    // InfractionTicket - Staff
+    // InfractionTicket - User
     // =======================
     modelBuilder.Entity<InfractionTicket>()
-    .HasOne(i => i.Staff)                   
-    .WithMany(s => s.InfractionTickets)    
-    .HasForeignKey(i => i.StaffId);
+    .HasOne(i => i.User)                   
+    .WithMany(u => u.InfractionTickets)    
+    .HasForeignKey(i => i.UserId);
     }
 }

@@ -49,7 +49,7 @@ public class Repository<T> : IRepository<T> where T : class
         var existing = await _context.Set<T>().FindAsync(key);
     }
 
-    public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsAsync(object id, CancellationToken cancellationToken = default)
     {
         var entity = await _context.Set<T>().FindAsync(id, cancellationToken);
         return entity != null;

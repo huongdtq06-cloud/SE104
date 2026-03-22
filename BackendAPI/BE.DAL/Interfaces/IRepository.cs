@@ -7,5 +7,5 @@ public interface IRepository<T>
     Task UpdateAsync(T entity, CancellationToken cancellationToken = default);
     
     Task DeleteAsync(object id, CancellationToken cancellationToken = default);
-    Task<bool> ExistsAsync(string id, CancellationToken cancellationToken = default);
+    Task<bool> ExistsAsync(object id, CancellationToken cancellationToken = default);
 }

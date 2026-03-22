@@ -13,11 +13,18 @@ namespace BackendAPI.BE.DAL.Entities;
 
 public class User
 {
-    public string UserId { get; set; } = string.Empty;
+    public int UserId { get; set; } =0 ;
     public string Username { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
+
+    // navigation
+    public List<Shift> Shifts { get; set; }
+    public List<Note> Notes { get; set; }
+    public List<InfractionTicket> InfractionTickets { get; set; }
+    
     
 }

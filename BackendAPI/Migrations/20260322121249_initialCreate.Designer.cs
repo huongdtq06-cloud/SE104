@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BackendAPI.BE.DAL.Migrations
+namespace BackendAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260321092603_RemoveRoleFromUsers")]
-    partial class RemoveRoleFromUsers
+    [Migration("20260322121249_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,16 +27,17 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.DamageItem", b =>
                 {
-                    b.Property<string>("DamageItemId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("DamageItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("NoteID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DamageItemId"));
 
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("NoteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -47,7 +48,7 @@ namespace BackendAPI.BE.DAL.Migrations
 
                     b.HasKey("DamageItemId");
 
-                    b.HasIndex("NoteID");
+                    b.HasIndex("NoteId");
 
                     b.HasIndex("ProductId");
 
@@ -56,23 +57,24 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.DeliveryItem", b =>
                 {
-                    b.Property<string>("DeliveryItemId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("DeliveryItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("NoteID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeliveryItemId"));
 
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("NoteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("DeliveryItemId");
 
-                    b.HasIndex("NoteID");
+                    b.HasIndex("NoteId");
 
                     b.HasIndex("ProductId");
 
@@ -81,8 +83,11 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.InfractionTicket", b =>
                 {
-                    b.Property<string>("InfractionTicketId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("InfractionTicketId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InfractionTicketId"));
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -94,21 +99,23 @@ namespace BackendAPI.BE.DAL.Migrations
                     b.Property<decimal>("Penalty")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("StaffId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("InfractionTicketId");
 
-                    b.HasIndex("StaffId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("InfractionTickets");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Note", b =>
                 {
-                    b.Property<string>("NoteId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("NoteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NoteId"));
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -118,13 +125,11 @@ namespace BackendAPI.BE.DAL.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<string>("StaffId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("StaffUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("UserId1")
+                        .HasColumnType("int");
 
                     b.Property<string>("type")
                         .IsRequired()
@@ -132,9 +137,9 @@ namespace BackendAPI.BE.DAL.Migrations
 
                     b.HasKey("NoteId");
 
-                    b.HasIndex("StaffId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("StaffUserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Notes");
 
@@ -145,8 +150,11 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Product", b =>
                 {
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -185,11 +193,14 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.ProductSupplier", b =>
                 {
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SupplierId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ProductId", "SupplierId");
 
@@ -200,23 +211,24 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.ReceiptItem", b =>
                 {
-                    b.Property<string>("ReceiptItemId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ReceiptItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("NoteID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptItemId"));
 
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("NoteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("ReceiptItemId");
 
-                    b.HasIndex("NoteID");
+                    b.HasIndex("NoteId");
 
                     b.HasIndex("ProductId");
 
@@ -225,8 +237,11 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Shift", b =>
                 {
-                    b.Property<string>("ShiftId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ShiftId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShiftId"));
 
                     b.Property<string>("Duty")
                         .IsRequired()
@@ -239,41 +254,26 @@ namespace BackendAPI.BE.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("ShiftId");
 
-                    b.HasIndex("StaffId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Shifts");
                 });
 
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Staff", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("BaseSalary")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("Staffs");
-                });
-
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Supplier", b =>
                 {
-                    b.Property<string>("SupplierId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SupplierId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SupplierId"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -311,8 +311,11 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.User", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -379,9 +382,8 @@ namespace BackendAPI.BE.DAL.Migrations
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("SupplierId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
 
                     b.Property<string>("qualityCheckStatus")
                         .IsRequired()
@@ -396,7 +398,7 @@ namespace BackendAPI.BE.DAL.Migrations
                 {
                     b.HasOne("BackendAPI.BE.DAL.Entities.DamageNote", "DamageNote")
                         .WithMany("DamageItems")
-                        .HasForeignKey("NoteID")
+                        .HasForeignKey("NoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -415,7 +417,7 @@ namespace BackendAPI.BE.DAL.Migrations
                 {
                     b.HasOne("BackendAPI.BE.DAL.Entities.DeliveryNote", "DeliveryNote")
                         .WithMany("DeliveryItems")
-                        .HasForeignKey("NoteID")
+                        .HasForeignKey("NoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -432,30 +434,28 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.InfractionTicket", b =>
                 {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Staff", "Staff")
+                    b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
                         .WithMany("InfractionTickets")
-                        .HasForeignKey("StaffId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Staff");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Note", b =>
                 {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Staff", null)
+                    b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("StaffId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Staff", "Staff")
+                    b.HasOne("BackendAPI.BE.DAL.Entities.User", null)
                         .WithMany("Notes")
-                        .HasForeignKey("StaffUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId1");
 
-                    b.Navigation("Staff");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.ProductSupplier", b =>
@@ -481,7 +481,7 @@ namespace BackendAPI.BE.DAL.Migrations
                 {
                     b.HasOne("BackendAPI.BE.DAL.Entities.GoodsReceipt", "GoodReceipt")
                         .WithMany("ReceiptItems")
-                        .HasForeignKey("NoteID")
+                        .HasForeignKey("NoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -498,20 +498,9 @@ namespace BackendAPI.BE.DAL.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Shift", b =>
                 {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Staff", "Staff")
-                        .WithMany("Shifts")
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Staff");
-                });
-
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Staff", b =>
-                {
                     b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
-                        .WithOne()
-                        .HasForeignKey("BackendAPI.BE.DAL.Entities.Staff", "UserId")
+                        .WithMany("Shifts")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -540,18 +529,18 @@ namespace BackendAPI.BE.DAL.Migrations
                     b.Navigation("ReceiptItems");
                 });
 
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Staff", b =>
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Supplier", b =>
+                {
+                    b.Navigation("ProductSuppliers");
+                });
+
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.User", b =>
                 {
                     b.Navigation("InfractionTickets");
 
                     b.Navigation("Notes");
 
                     b.Navigation("Shifts");
-                });
-
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Supplier", b =>
-                {
-                    b.Navigation("ProductSuppliers");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.DamageNote", b =>
