@@ -54,3 +54,6 @@ TestResults/
 
 ## dotenv (nếu có)
 .env
+BackendAPI/obj/project.nuget.cache
+BackendAPI/obj/Debug/net9.0/BackendAPI.assets.cache
+BackendAPI/obj/Debug/net9.0/BackendAPI.AssemblyInfoInputs.cache

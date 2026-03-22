@@ -2,6 +2,8 @@ using BackendAPI.BE.DAL.Interfaces;
 using BackendAPI.BE.DAL.Data;
 using BackendAPI.BE.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
+using BackendAPI.BE.BLL.Services;
+using BackendAPI.BE.BLL.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddControllers();

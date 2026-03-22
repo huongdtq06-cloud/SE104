@@ -19,5 +19,14 @@ public class User
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
+
+    public string Role { get; set; } = string.Empty;
+
+    // navigation
+    public List<PasswordResetToken> PasswordResetTokens { get; set; }
+    public List<Shift> Shifts { get; set; }
+    public List<Note> Notes { get; set; }
+    public List<InfractionTicket> InfractionTickets { get; set; }
+    
     
 }
