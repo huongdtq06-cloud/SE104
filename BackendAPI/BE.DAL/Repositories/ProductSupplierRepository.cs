@@ -29,7 +29,7 @@ public class ProductSupplierRepository : IProductSupplierRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(string productId, string supplierId)
+    public async Task DeleteAsync(int productId, int supplierId)
     {
         var entity = await _context.ProductSuppliers.FindAsync(productId, supplierId);
         if (entity == null) return;
@@ -43,26 +43,26 @@ public class ProductSupplierRepository : IProductSupplierRepository
         return await _context.ProductSuppliers.ToListAsync(cancellationToken);
     }
 
-    public async Task<ProductSupplier?> GetByIdAsync(string productId, string supplierId, CancellationToken cancellationToken = default)
+    public async Task<ProductSupplier?> GetByIdAsync(int productId, int supplierId, CancellationToken cancellationToken = default)
     {
         return await _context.ProductSuppliers.FindAsync(new object[] { productId, supplierId }, cancellationToken);
     }
 
-    public async Task<IEnumerable<ProductSupplier>> GetByProductIdAsync(string productId)
+    public async Task<IEnumerable<ProductSupplier>> GetByProductIdAsync(int productId)
     {
         return await _context.ProductSuppliers
             .Where(x => x.ProductId == productId)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<ProductSupplier>> GetBySupplierIdAsync(string supplierId)
+    public async Task<IEnumerable<ProductSupplier>> GetBySupplierIdAsync(int supplierId)
     {
         return await _context.ProductSuppliers
             .Where(x => x.SupplierId == supplierId)
             .ToListAsync();
     }
 
-    public async Task<bool> ExistsAsync(string productId, string supplierId, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsAsync(int productId, int supplierId, CancellationToken cancellationToken = default)
     {
         return await _context.ProductSuppliers
             .AnyAsync(x => x.ProductId == productId && x.SupplierId == supplierId, cancellationToken);

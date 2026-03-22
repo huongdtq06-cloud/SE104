@@ -152,3 +152,11 @@ d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\BackendAPI.pdb
 d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\BackendAPI.genruntimeconfig.cache
 d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\ref\BackendAPI.dll
 d:\UIT\SE104\Project\BackendAPI\obj\Debug\net9.0\BackendAPI.sourcelink.json
+D:\UIT\SE104\Project\BackendAPI\bin\Debug\net9.0\AutoMapper.dll
+D:\UIT\SE104\Project\BackendAPI\bin\Debug\net9.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\UIT\SE104\Project\BackendAPI\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\UIT\SE104\Project\BackendAPI\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\UIT\SE104\Project\BackendAPI\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
+D:\UIT\SE104\Project\BackendAPI\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
+D:\UIT\SE104\Project\BackendAPI\bin\Debug\net9.0\System.Diagnostics.DiagnosticSource.dll
+D:\UIT\SE104\Project\BackendAPI\bin\Debug\net9.0\BCrypt.Net-Next.dll

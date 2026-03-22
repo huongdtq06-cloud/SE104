@@ -9,9 +9,9 @@ namespace BackendAPI.BE.DAL.Entities;
 
 public class DamageItem
 {
-    public string DamageItemId { get; set; }
-    public string ProductId { get; set; }
-    public string NoteID { get; set; } // FK
+    public int DamageItemId { get; set; }
+    public int ProductId { get; set; }
+    public int NoteId { get; set; } // FK
     public int Quantity { get; set; }   
     public string Reason { get; set; }
 

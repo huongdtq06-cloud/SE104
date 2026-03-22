@@ -11,7 +11,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     ));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductSupplierRepository, ProductSupplierRepository>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
