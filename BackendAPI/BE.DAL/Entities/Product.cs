@@ -18,12 +18,10 @@ public class Product
     public string Category { get; set; }
     public string Description { get; set; }
     public decimal SellPrice { get; set; }
-    public decimal CostPrice { get; set; }
     public int StockQuantity { get; set; }
     public int DefectiveQuantity { get; set; }
     public int DamagedQuantity { get; set; }
-
-    public int SupplierId { get; set; }     
+  
 
 
     // Navigation properties

@@ -4,6 +4,7 @@ using BackendAPI.BE.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260323143621_addRefreshTokenTable")]
+    partial class addRefreshTokenTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,36 +148,6 @@ namespace BackendAPI.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.OTP", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Expiration")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OTPs");
-                });
-
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.PasswordResetToken", b =>
                 {
                     b.Property<int>("Id")
@@ -193,11 +166,14 @@ namespace BackendAPI.Migrations
                     b.Property<DateTime>("Expiration")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -538,9 +514,13 @@ namespace BackendAPI.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.PasswordResetToken", b =>
                 {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.User", null)
+                    b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
                         .WithMany("PasswordResetTokens")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.ProductSupplier", b =>

@@ -325,3 +325,4 @@ D:\UIT\SE104\project1\SE104\BackendAPI\obj\Debug\net9.0\refint\BackendAPI.dll
 D:\UIT\SE104\project1\SE104\BackendAPI\obj\Debug\net9.0\BackendAPI.pdb
 D:\UIT\SE104\project1\SE104\BackendAPI\obj\Debug\net9.0\BackendAPI.genruntimeconfig.cache
 D:\UIT\SE104\project1\SE104\BackendAPI\obj\Debug\net9.0\ref\BackendAPI.dll
+D:\UIT\SE104\project1\SE104\BackendAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

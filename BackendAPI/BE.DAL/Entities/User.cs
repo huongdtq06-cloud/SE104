@@ -26,6 +26,6 @@ public class User
     public List<Note> Notes { get; set; }
     public List<PasswordResetToken> PasswordResetTokens { get; set; }
     public List<InfractionTicket> InfractionTickets { get; set; }
-    
+    public List<RefreshToken> RefreshTokens { get; set; }
     
 }

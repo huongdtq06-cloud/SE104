@@ -3,8 +3,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BackendAPI.BE.BLL.Interfaces;
-namespace BackendAPI.BE.BLL.Services;
+using System.Security.Cryptography;
 using UserModel = BackendAPI.BE.API.DTO.UserDTO;
+
+
+namespace BackendAPI.BE.BLL.Services;
 
 public class TokenService : ITokenService
 {
@@ -14,7 +17,7 @@ public class TokenService : ITokenService
     {
         _config = config;
     }
-    public string CreateToken(UserModel user)
+    public string CreateAccessToken(UserModel user)
     {
         // 1. Định nghĩa thông tin người dùng (Claims)
         var claims = new List<Claim>
@@ -43,5 +46,15 @@ public class TokenService : ITokenService
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         return tokenHandler.WriteToken(token);
+    }
+  
+
+    public string GenerateRandomStringToken()
+    {
+        var randomBytes = new byte[32]; 
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomBytes);
+
+        return Convert.ToBase64String(randomBytes);
     }
 }

@@ -15,9 +15,11 @@ public class AuthController : ControllerBase
     private readonly AuthService _authService;
 
 
-    public AuthController(IMapper mapper, IUserRepository repository, IEmailService emailService, IRepository<PasswordResetToken> tokenService)
+    public AuthController(IMapper mapper, IUserRepository userRepository,
+     IEmailService emailService, IPasswordResetTokenRepository PasswordResetTokenRepository,
+      ITokenService tokenService, IRepository<RefreshToken> refreshTokenRepository, IOTPRepository OTPRepository)
     {        
-        _authService = new AuthService(repository,tokenService, mapper, emailService);        
+        _authService = new AuthService(userRepository, OTPRepository, PasswordResetTokenRepository, mapper, emailService, tokenService, refreshTokenRepository);        
     }
 
 
@@ -25,9 +27,9 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginDTO model)
     {
         var result = await _authService.LoginAsync(model);
-        if (!result)
+        if (result == null)
             return Unauthorized(new { Success = false, Message = "Invalid username or password." });
-        return Ok(new { Success = result });
+        return Ok(new { Success = true, AccessToken = result.AccessToken, RefreshToken = result.RefreshToken });
     }   
 
     [HttpPost("signup")]
@@ -51,9 +53,22 @@ public class AuthController : ControllerBase
     [HttpPost("verify-otp")]
     public async Task<IActionResult> VerifyOtp(VerifyOtpDTO model)
     {
-        var result = await _authService.verifyOtpAsync(model.Otp, model.Otp);
-        if (!result)
+        var result = await _authService.verifyOtpAsync(model.Otp, model.Email);
+        if (result == null)
             return BadRequest(new { Success = false, Message = "Invalid OTP." });
+        return Ok(new 
+        {
+            Success = true,
+            ResetToken = result 
+        });
+    }
+
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordDTO model)
+    {
+        var result = await _authService.ResetPasswordAsync(model);
+        if (!result)
+            return BadRequest(new { Success = false, Message = "Invalid reset token." });
         return Ok(new { Success = true });
     }
 }

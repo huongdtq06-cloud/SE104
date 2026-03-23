@@ -23,15 +23,23 @@ public class AppDbContext : DbContext
     public DbSet<DamageItem> damageItems { get; set; }
     public DbSet<ReceiptItem> receiptItems { get; set; }
     public DbSet<DeliveryItem> deliveryItems { get; set; }
-
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<OTP> OTPs { get; set; }
 public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+    // =======================
+    // User - RefreshToken (1-n)
+    // =======================
+    modelBuilder.Entity<RefreshToken>()
+        .HasOne(rt => rt.User)
+        .WithMany(u => u.RefreshTokens)
+        .HasForeignKey(rt => rt.UserId);
 
-
+        
     // =======================
     // ProductSupplier (N-N)
     // =======================
@@ -124,14 +132,6 @@ public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     .WithMany(u => u.InfractionTickets)    
     .HasForeignKey(i => i.UserId);
 
-    
-    // =======================
-    // PasswordResetToken - User
-    // =======================
-    modelBuilder.Entity<PasswordResetToken>()
-        .HasOne(p => p.User)
-        .WithMany(u => u.PasswordResetTokens)
-        .HasForeignKey(p => p.UserId);
     }
 
     

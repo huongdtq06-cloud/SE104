@@ -8,5 +8,11 @@ public class MappingProfile : Profile
     {
         CreateMap<TestItem, TestItemDTO>();
         CreateMap<TestItemDTO, TestItem>();
+        CreateMap<SignupDTO, User>();
+        CreateMap<User, SignupDTO>();
+        CreateMap<Product, ProductDTO>();
+        CreateMap<ProductDTO, Product>();
+        CreateMap<UserDTO, User>();
+        CreateMap<User, UserDTO>();
     }
 }
