@@ -1,7 +1,9 @@
 using BackendAPI.BE.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using BackendAPI.BE.DAL.Data;
+using System.Linq.Expressions;
 namespace BackendAPI.BE.DAL.Repositories;
+
 public class Repository<T> : IRepository<T> where T : class
 {
     protected readonly AppDbContext _context;
@@ -46,12 +48,23 @@ public class Repository<T> : IRepository<T> where T : class
             .Select(p => p.PropertyInfo!.GetValue(entity))
             .ToArray();
 
-        var existing = await _context.Set<T>().FindAsync(key);
+        var existing = await _context.Set<T>().FindAsync(key,cancellationToken);
+        _context.Entry(existing).CurrentValues.SetValues(entity);
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> ExistsAsync(object id, CancellationToken cancellationToken = default)
     {
         var entity = await _context.Set<T>().FindAsync(id, cancellationToken);
         return entity != null;
+    }
+    public async Task<IEnumerable<T>> GetAsync(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<T>()
+            .Where(predicate)
+            .ToListAsync(cancellationToken);
     }
 }

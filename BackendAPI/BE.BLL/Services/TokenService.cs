@@ -23,8 +23,10 @@ public class TokenService : ITokenService
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(ClaimTypes.Role, user.Role) 
+            // Sử dụng ClaimTypes.NameIdentifier cho ID để đồng bộ với hệ thống .NET
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()), 
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()), // Giữ lại sub nếu muốn
+            new Claim(ClaimTypes.Role, user.Role ?? "") 
         };
 
         // 2. Lấy Key từ cấu hình và tạo Key bảo mật
@@ -35,7 +37,7 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddHours(1), // Token hết hạn sau 1 ngày
+            Expires = DateTime.Now.AddMinutes(3), // Token hết hạn sau 1 ngày
             SigningCredentials = creds,
             Issuer = _config["Jwt:Issuer"],
             Audience = _config["Jwt:Audience"]
@@ -56,5 +58,24 @@ public class TokenService : ITokenService
         rng.GetBytes(randomBytes);
 
         return Convert.ToBase64String(randomBytes);
+    }
+
+    public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+    {
+
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false, 
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"])),
+            ValidateLifetime = false // Quan trọng: Không check hạn sử dụng ở đây
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+
+       
+        return principal;
     }
 }

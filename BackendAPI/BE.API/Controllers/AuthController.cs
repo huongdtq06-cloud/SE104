@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using BackendAPI.BE.DAL.Entities;
 using BackendAPI.BE.BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -15,11 +16,14 @@ public class AuthController : ControllerBase
     private readonly AuthService _authService;
 
 
-    public AuthController(IMapper mapper, IUserRepository userRepository,
-     IEmailService emailService, IPasswordResetTokenRepository PasswordResetTokenRepository,
-      ITokenService tokenService, IRepository<RefreshToken> refreshTokenRepository, IOTPRepository OTPRepository)
+    public AuthController(IMapper mapper, IUserRepository userRepository
+        ,IEmailService emailService, IRepository<PasswordResetToken> PasswordResetTokenRepository
+        ,ITokenService tokenService, IRepository<RefreshToken> refreshTokenRepository
+        ,IOTPRepository OTPRepository, IHttpContextAccessor httpContextAccessor)
     {        
-        _authService = new AuthService(userRepository, OTPRepository, PasswordResetTokenRepository, mapper, emailService, tokenService, refreshTokenRepository);        
+        _authService = new AuthService(userRepository, OTPRepository
+            , PasswordResetTokenRepository, mapper, emailService, tokenService
+            , refreshTokenRepository, httpContextAccessor);        
     }
 
 
@@ -32,10 +36,19 @@ public class AuthController : ControllerBase
         return Ok(new { Success = true, AccessToken = result.AccessToken, RefreshToken = result.RefreshToken });
     }   
 
-    [HttpPost("signup")]
+    [HttpPost("signup-manager")]
     public async Task<IActionResult> Signup(SignupDTO model)
     {
-        var result = await _authService.SignupAsync(model);
+        var result = await _authService.SignupManagerAsync(model);
+        if (!result)
+            return BadRequest(new { Success = false, Message = "Username already exists." });
+        return Ok(new { Success = result });
+    }
+
+    [HttpPost("signup-warehouse-staff")]
+    public async Task<IActionResult> SignupWarehouseStaff(SignupDTO model)
+    {
+        var result = await _authService.SignupWarehouseStaffAsync(model);
         if (!result)
             return BadRequest(new { Success = false, Message = "Username already exists." });
         return Ok(new { Success = result });
@@ -70,5 +83,16 @@ public class AuthController : ControllerBase
         if (!result)
             return BadRequest(new { Success = false, Message = "Invalid reset token." });
         return Ok(new { Success = true });
+    }
+ 
+    //[AllowAnonymous]
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken(RefreshTokenRequestDTO model)
+    {
+        var result = await _authService.RefreshTokenAsync(model);
+        if (result == null)
+            return Unauthorized(new { Success = false, Message = "Invalid refresh token." });
+        
+        return Ok(new { Success = true, AccessToken = result.AccessToken, RefreshToken = result.RefreshToken });
     }
 }
