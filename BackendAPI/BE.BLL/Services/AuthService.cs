@@ -86,6 +86,19 @@ public class AuthService: IAuthService
         return true;
     }
 
+    // public async Task<bool> SignupWarehouseStaffAsync(SignupDTO model)
+    // {
+    //     if (await _userRepository.GetByUsernameAsync(model.Username) != null)
+    //         return false; // Username already exists
+
+    //     var user = _mapper.Map<User>(model);
+    //     user.PasswordHash = BCrypt.HashPassword(model.Password);
+    //     user.Role = "WarehouseStaff"; // Set the role for warehouse staff
+
+    //     await _userRepository.AddAsync(user);
+    //     return true;
+    // }
+
     public async Task<bool> ForgotPasswordAsync(ForgotPasswordDTO model)
     {
         var user = await _userRepository.GetByEmailAsync(model.Email);
@@ -140,6 +153,8 @@ public class AuthService: IAuthService
 
         user.PasswordHash = BCrypt.HashPassword(model.newPass);
         await _userRepository.UpdateAsync(user);
+
+        await _PasswordResetTokenRepository.DeleteAsync(tokenEntity.Id);
         return true;
     }
 
@@ -149,11 +164,7 @@ public class AuthService: IAuthService
     {
         // 1. Lấy principal từ token cũ (đã hết hạn)
         var principal = _tokenService.GetPrincipalFromExpiredToken(model.accessToken);
-        //var userid = principal.Identity; // Hoặc lấy Claim ID
-        // Lấy giá trị của sub
-        //var userid = principal.FindFirstValue(ClaimTypes.NameIdentifier); 
 
-        // Hoặc lấy trực tiếp bằng tên string nếu NameIdentifier không ra
         var userid = principal.FindFirstValue("sub");
 
         // 2. Kiểm tra RefreshToken trong Database xem có khớp với User này không

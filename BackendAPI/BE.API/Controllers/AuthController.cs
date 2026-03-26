@@ -54,6 +54,8 @@ public class AuthController : ControllerBase
         return Ok(new { Success = result });
     }
 
+
+
     [HttpPost("ForgotPassword")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
     {
@@ -85,7 +87,6 @@ public class AuthController : ControllerBase
         return Ok(new { Success = true });
     }
  
-    //[AllowAnonymous]
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(RefreshTokenRequestDTO model)
     {
