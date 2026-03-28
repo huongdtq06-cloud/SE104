@@ -18,19 +18,28 @@ public class AuthService: IAuthService
     private readonly IUserRepository _userRepository;
     private readonly IOTPRepository _OTPRepository;
     private readonly IRepository<PasswordResetToken> _PasswordResetTokenRepository;
+    private readonly IRepository<VerifyEmailToken> _verifyEmailTokenRepository;
     private readonly IMapper _mapper;
     private readonly IEmailService _emailService;
     private readonly ITokenService _tokenService;
     private readonly IRepository<RefreshToken> _refreshTokenRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     //private readonly IConfiguration _configuration;
-    public AuthService(IUserRepository userRepository, IOTPRepository OTPRepository, IRepository<PasswordResetToken> PasswordResetTokenRepository,
-     IMapper mapper, IEmailService emailService, ITokenService tokenService, IRepository<RefreshToken> refreshTokenRepository
-     , IHttpContextAccessor httpContextAccessor)
+    public AuthService(
+        IUserRepository userRepository,
+        IOTPRepository OTPRepository,
+        IRepository<PasswordResetToken> PasswordResetTokenRepository,
+        IRepository<VerifyEmailToken> verifyEmailTokenRepository,
+        IMapper mapper,
+        IEmailService emailService,
+        ITokenService tokenService,
+        IRepository<RefreshToken> refreshTokenRepository,
+        IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
         _OTPRepository = OTPRepository;
         _PasswordResetTokenRepository = PasswordResetTokenRepository;
+        _verifyEmailTokenRepository = verifyEmailTokenRepository;
         _mapper = mapper;
         _emailService = emailService;
         _tokenService = tokenService;
@@ -65,25 +74,54 @@ public class AuthService: IAuthService
 
         if(await _userRepository.GetByEmailAsync(model.Email) != null)
             return false;
-        //await _emailService.SendConfirmationEmailAsync(model.Email);
 
+        
         var user = _mapper.Map<User>(model);
-        user.PasswordHash = BCrypt.HashPassword(model.Password);        
+        user.PasswordHash = BCrypt.HashPassword(model.Password);  
+        user = await _userRepository.AddAsync(user);
+
+        await _emailService.SendConfirmationEmailAsync(model.Email, user.UserId);   
 
 
-        await _userRepository.AddAsync(user);
+        
         return true;
     }
 
     //public async Task<bool> verifyUser
+    public async Task<bool> VerifyEmailAsync(VerifyEmailDTO model)
+    {
+        if (string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Token))
+            return false;
+
+        var tokens = await _verifyEmailTokenRepository.GetAsync(t =>
+            t.Email == model.Email && t.Token == model.Token);
+
+        var tokenEntity = tokens.FirstOrDefault();
+        if (tokenEntity == null)
+            return false;
+
+        if (tokenEntity.ExpiresAt < DateTime.UtcNow)
+            return false;
+
+        var user = await _userRepository.GetByIdAsync(tokenEntity.UserId);
+        if (user == null || !string.Equals(user.Email, model.Email, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        if (!user.IsVerified)
+        {
+            user.IsVerified = true;
+            await _userRepository.UpdateAsync(user);
+        }
+
+        await _verifyEmailTokenRepository.DeleteAsync(tokenEntity.VerifyEmailTokenId);
+        return true;
+    }
 
     public async Task<bool> ForgotPasswordAsync(ForgotPasswordDTO model)
     {
         var user = await _userRepository.GetByEmailAsync(model.Email);
         if (user == null)
             return false; // Email not found
-        var otpCode = await _emailService.GenerateOtpAsync();
-
         await _emailService.SendResetPasswordEmailAsync(model.Email);
 
         return true;

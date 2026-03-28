@@ -22,7 +22,7 @@ public class User
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
-    //public bool isVerified {get; set;}= false;
+    public bool IsVerified { get; set; } = false;
 
     // navigation
     public List<Shift> Shifts { get; set; }
@@ -31,5 +31,6 @@ public class User
     public List<InfractionTicket> InfractionTickets { get; set; }
     public List<RefreshToken> RefreshTokens { get; set; }
     public List<WarehouseStaff> WarehouseStaffs { get; set; }
+    public List<VerifyEmailToken> VerifyEmailTokens { get; set; }
     
 }

@@ -5,6 +5,7 @@ public interface IAuthService
     Task<TokenDTO> LoginAsync(LoginDTO model);
     Task<bool> SignupAsync(SignupDTO model);
 
+    Task<bool> VerifyEmailAsync(VerifyEmailDTO model);
 
     Task<bool> ForgotPasswordAsync(ForgotPasswordDTO model);
     Task<string> createPasswordResetTokenAsync(string email); 

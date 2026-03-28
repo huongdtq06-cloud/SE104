@@ -21,12 +21,22 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task DeleteAsync(object id, CancellationToken cancellationToken = default)
     {
-        var entity = await _context.Set<T>().FindAsync(id, cancellationToken);
-        if (entity == null) return ;
-
-        _context.Set<T>().Remove(entity);
-        await _context.SaveChangesAsync(cancellationToken);
+        var entity = await _context.Set<T>().FindAsync(new object[] { id }, cancellationToken);
         
+        // Nếu không tìm thấy ngay từ đầu, thoát luôn
+        if (entity == null) return;
+
+        try 
+        {
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            
+            // _logger.LogInformation("Entity already deleted.");
+            return; 
+        }
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)

@@ -57,7 +57,13 @@ public class TokenService : ITokenService
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomBytes);
 
-        return Convert.ToBase64String(randomBytes);
+        // 1. Tạo Base64 bình thường
+        string base64 = Convert.ToBase64String(randomBytes);
+
+        // 2. Biến nó thành URL Safe
+        return base64.Replace('+', '-')   // Thay + bằng -
+                    .Replace('/', '_')   // Thay / bằng _
+                    .TrimEnd('=');       // Xóa dấu = ở cuối
     }
 
     public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
