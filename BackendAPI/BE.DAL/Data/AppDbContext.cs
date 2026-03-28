@@ -25,7 +25,11 @@ public class AppDbContext : DbContext
     public DbSet<DeliveryItem> deliveryItems { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<OTP> OTPs { get; set; }
-public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
+    public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+    public DbSet<Warehouse> Warehouses { get; set; }
+    public DbSet<WarehouseStaff> WarehouseStaffs { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -72,6 +76,15 @@ public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
         .HasOne(n => n.User)
         .WithMany()
         .HasForeignKey(n => n.UserId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    // =======================
+    // Note - Warehouse (1-n)
+    // =======================
+    modelBuilder.Entity<Note>()
+        .HasOne(n => n.Warehouse)
+        .WithMany()
+        .HasForeignKey(n => n.WarehouseId)
         .OnDelete(DeleteBehavior.Restrict);
 
     // =======================
@@ -125,6 +138,15 @@ public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
         .HasForeignKey(s => s.UserId);
 
     // =======================
+    // Shift - Warehouse
+    // =======================
+    modelBuilder.Entity<Shift>()
+        .HasOne(s => s.Warehouse)
+        .WithMany(o => o.Shifts)
+        .HasForeignKey(s => s.WarehouseId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    // =======================
     // InfractionTicket - User
     // =======================
     modelBuilder.Entity<InfractionTicket>()
@@ -132,7 +154,64 @@ public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     .WithMany(u => u.InfractionTickets)    
     .HasForeignKey(i => i.UserId);
 
-    }
+    
 
     
+    // =======================
+    // WarehouseStaff - Warehouse
+    // =======================
+    modelBuilder.Entity<WarehouseStaff>()
+        .HasKey(ws => new { ws.WarehouseId, ws.UserId });
+
+    modelBuilder.Entity<WarehouseStaff>()
+        .HasOne(ws => ws.Warehouse)
+        .WithMany(w => w.WarehouseStaffs)
+        .HasForeignKey(ws => ws.WarehouseId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    modelBuilder.Entity<WarehouseStaff>()
+        .HasOne(ws => ws.User)
+        .WithMany(u => u.WarehouseStaffs)
+        .HasForeignKey(ws => ws.UserId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    // =======================
+    // Supplier - Warehouse
+    // =======================
+    modelBuilder.Entity<Supplier>()
+        .HasOne(s => s.Warehouse)
+        .WithMany(w => w.Suppliers)
+        .HasForeignKey(s => s.WarehouseId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+
+    // =======================
+    // Product - Warehouse   
+    // =======================
+    modelBuilder.Entity<Product>()
+        .HasOne(p => p.Warehouse)
+        .WithMany(w => w.Products)
+        .HasForeignKey(p => p.WarehouseId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    // =======================
+    // Warehouse - Creator (User)
+    // =======================
+    modelBuilder.Entity<Warehouse>()
+        .HasOne(w => w.Creator)
+        .WithMany()
+        .HasForeignKey(w => w.CreatorId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    // =======================
+    // Warehouse - InfractionTicket
+    // =======================
+    modelBuilder.Entity<InfractionTicket>()
+        .HasOne(i => i.Warehouse)
+        .WithMany(w => w.InfractionTickets)
+        .HasForeignKey(i => i.WarehouseId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+    }
+          
 }
