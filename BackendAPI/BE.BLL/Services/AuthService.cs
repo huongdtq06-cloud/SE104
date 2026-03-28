@@ -70,6 +70,7 @@ public class AuthService: IAuthService
         var user = _mapper.Map<User>(model);
         user.PasswordHash = BCrypt.HashPassword(model.Password);        
 
+
         await _userRepository.AddAsync(user);
         return true;
     }
