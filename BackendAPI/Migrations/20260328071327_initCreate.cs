@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BackendAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,54 +51,12 @@ namespace BackendAPI.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InfractionTickets",
-                columns: table => new
-                {
-                    InfractionTicketId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OrganizationId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Penalty = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InfractionTickets", x => x.InfractionTicketId);
-                    table.ForeignKey(
-                        name: "FK_InfractionTickets_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Organizations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatorId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Organizations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Organizations_Users_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -145,27 +103,74 @@ namespace BackendAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrganizationMembers",
+                name: "VerifyEmailTokens",
                 columns: table => new
                 {
-                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    VerifyEmailTokenId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrganizationMembers", x => new { x.OrganizationId, x.UserId });
+                    table.PrimaryKey("PK_VerifyEmailTokens", x => x.VerifyEmailTokenId);
                     table.ForeignKey(
-                        name: "FK_OrganizationMembers_Organizations_OrganizationId",
-                        column: x => x.OrganizationId,
-                        principalTable: "Organizations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_OrganizationMembers_Users_UserId",
+                        name: "FK_VerifyEmailTokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Warehouses",
+                columns: table => new
+                {
+                    WarehouseId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatorId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Warehouses", x => x.WarehouseId);
+                    table.ForeignKey(
+                        name: "FK_Warehouses_Users_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InfractionTickets",
+                columns: table => new
+                {
+                    InfractionTicketId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Penalty = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InfractionTickets", x => x.InfractionTicketId);
+                    table.ForeignKey(
+                        name: "FK_InfractionTickets_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InfractionTickets_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "WarehouseId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -175,7 +180,7 @@ namespace BackendAPI.Migrations
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -188,10 +193,10 @@ namespace BackendAPI.Migrations
                 {
                     table.PrimaryKey("PK_Products", x => x.ProductId);
                     table.ForeignKey(
-                        name: "FK_Products_Organizations_OrganizationId",
-                        column: x => x.OrganizationId,
-                        principalTable: "Organizations",
-                        principalColumn: "Id",
+                        name: "FK_Products_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "WarehouseId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -201,7 +206,7 @@ namespace BackendAPI.Migrations
                 {
                     ShiftId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
@@ -212,17 +217,17 @@ namespace BackendAPI.Migrations
                 {
                     table.PrimaryKey("PK_Shifts", x => x.ShiftId);
                     table.ForeignKey(
-                        name: "FK_Shifts_Organizations_OrganizationId",
-                        column: x => x.OrganizationId,
-                        principalTable: "Organizations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Shifts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Shifts_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "WarehouseId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -231,7 +236,7 @@ namespace BackendAPI.Migrations
                 {
                     SupplierId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -240,10 +245,35 @@ namespace BackendAPI.Migrations
                 {
                     table.PrimaryKey("PK_Suppliers", x => x.SupplierId);
                     table.ForeignKey(
-                        name: "FK_Suppliers_Organizations_OrganizationId",
-                        column: x => x.OrganizationId,
-                        principalTable: "Organizations",
-                        principalColumn: "Id",
+                        name: "FK_Suppliers_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "WarehouseId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WarehouseStaffs",
+                columns: table => new
+                {
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WarehouseStaffs", x => new { x.WarehouseId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_WarehouseStaffs_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WarehouseStaffs_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "WarehouseId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -253,7 +283,7 @@ namespace BackendAPI.Migrations
                 {
                     NoteId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     type = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -271,12 +301,6 @@ namespace BackendAPI.Migrations
                 {
                     table.PrimaryKey("PK_Notes", x => x.NoteId);
                     table.ForeignKey(
-                        name: "FK_Notes_Organizations_OrganizationId",
-                        column: x => x.OrganizationId,
-                        principalTable: "Organizations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Notes_Suppliers_SupplierId",
                         column: x => x.SupplierId,
                         principalTable: "Suppliers",
@@ -293,6 +317,12 @@ namespace BackendAPI.Migrations
                         column: x => x.UserId1,
                         principalTable: "Users",
                         principalColumn: "UserId");
+                    table.ForeignKey(
+                        name: "FK_Notes_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "WarehouseId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -428,9 +458,9 @@ namespace BackendAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notes_OrganizationId",
-                table: "Notes",
-                column: "OrganizationId");
+                name: "IX_InfractionTickets_WarehouseId",
+                table: "InfractionTickets",
+                column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notes_SupplierId",
@@ -448,14 +478,9 @@ namespace BackendAPI.Migrations
                 column: "UserId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrganizationMembers_UserId",
-                table: "OrganizationMembers",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Organizations_CreatorId",
-                table: "Organizations",
-                column: "CreatorId");
+                name: "IX_Notes_WarehouseId",
+                table: "Notes",
+                column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PasswordResetTokens_UserId",
@@ -463,9 +488,9 @@ namespace BackendAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_OrganizationId",
+                name: "IX_Products_WarehouseId",
                 table: "Products",
-                column: "OrganizationId");
+                column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductSuppliers_SupplierId",
@@ -488,25 +513,40 @@ namespace BackendAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shifts_OrganizationId",
-                table: "Shifts",
-                column: "OrganizationId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Shifts_UserId",
                 table: "Shifts",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Suppliers_OrganizationId",
+                name: "IX_Shifts_WarehouseId",
+                table: "Shifts",
+                column: "WarehouseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Suppliers_WarehouseId",
                 table: "Suppliers",
-                column: "OrganizationId");
+                column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VerifyEmailTokens_UserId",
+                table: "VerifyEmailTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Warehouses_CreatorId",
+                table: "Warehouses",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarehouseStaffs_UserId",
+                table: "WarehouseStaffs",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -520,9 +560,6 @@ namespace BackendAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "InfractionTickets");
-
-            migrationBuilder.DropTable(
-                name: "OrganizationMembers");
 
             migrationBuilder.DropTable(
                 name: "OTPs");
@@ -546,6 +583,12 @@ namespace BackendAPI.Migrations
                 name: "TestItems");
 
             migrationBuilder.DropTable(
+                name: "VerifyEmailTokens");
+
+            migrationBuilder.DropTable(
+                name: "WarehouseStaffs");
+
+            migrationBuilder.DropTable(
                 name: "Notes");
 
             migrationBuilder.DropTable(
@@ -555,7 +598,7 @@ namespace BackendAPI.Migrations
                 name: "Suppliers");
 
             migrationBuilder.DropTable(
-                name: "Organizations");
+                name: "Warehouses");
 
             migrationBuilder.DropTable(
                 name: "Users");

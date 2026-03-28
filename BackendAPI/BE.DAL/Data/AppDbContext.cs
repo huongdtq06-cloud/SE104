@@ -26,6 +26,7 @@ public class AppDbContext : DbContext
     public DbSet<DeliveryItem> deliveryItems { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<OTP> OTPs { get; set; }
+    public DbSet<VerifyEmailToken> VerifyEmailTokens { get; set; }
 
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     public DbSet<Warehouse> Warehouses { get; set; }
@@ -48,6 +49,14 @@ public class AppDbContext : DbContext
         .HasOne(rt => rt.User)
         .WithMany(u => u.RefreshTokens)
         .HasForeignKey(rt => rt.UserId);
+
+    // =======================
+    // User - VerifyEmailToken (1-n)
+    // =======================
+    modelBuilder.Entity<VerifyEmailToken>()
+        .HasOne(v => v.User)
+        .WithMany(u => u.VerifyEmailTokens)
+        .HasForeignKey(v => v.UserId);
 
         
     // =======================

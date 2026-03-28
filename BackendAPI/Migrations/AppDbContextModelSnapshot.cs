@@ -93,18 +93,20 @@ namespace BackendAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Penalty")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("InfractionTicketId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("InfractionTickets");
                 });
@@ -125,13 +127,13 @@ namespace BackendAPI.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WarehouseId")
                         .HasColumnType("int");
 
                     b.Property<string>("type")
@@ -140,11 +142,11 @@ namespace BackendAPI.Migrations
 
                     b.HasKey("NoteId");
 
-                    b.HasIndex("OrganizationId");
-
                     b.HasIndex("UserId");
 
                     b.HasIndex("UserId1");
+
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Notes");
 
@@ -181,47 +183,6 @@ namespace BackendAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OTPs");
-                });
-
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Organization", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.ToTable("Organizations");
-                });
-
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.OrganizationMember", b =>
-                {
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("OrganizationId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("OrganizationMembers");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.PasswordResetToken", b =>
@@ -282,18 +243,18 @@ namespace BackendAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("SellPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
 
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductId");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Products");
                 });
@@ -386,20 +347,20 @@ namespace BackendAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("ShiftId");
 
-                    b.HasIndex("OrganizationId");
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Shifts");
                 });
@@ -416,7 +377,7 @@ namespace BackendAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrganizationId")
+                    b.Property<int>("WarehouseId")
                         .HasColumnType("int");
 
                     b.Property<string>("email")
@@ -429,7 +390,7 @@ namespace BackendAPI.Migrations
 
                     b.HasKey("SupplierId");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Suppliers");
                 });
@@ -467,6 +428,9 @@ namespace BackendAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -485,6 +449,80 @@ namespace BackendAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.VerifyEmailToken", b =>
+                {
+                    b.Property<int>("VerifyEmailTokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VerifyEmailTokenId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("VerifyEmailTokenId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("VerifyEmailTokens");
+                });
+
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Warehouse", b =>
+                {
+                    b.Property<int>("WarehouseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WarehouseId"));
+
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WarehouseId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Warehouses");
+                });
+
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.WarehouseStaff", b =>
+                {
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WarehouseId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WarehouseStaffs");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.DamageNote", b =>
@@ -581,17 +619,19 @@ namespace BackendAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BackendAPI.BE.DAL.Entities.Warehouse", "Warehouse")
+                        .WithMany("InfractionTickets")
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("User");
+
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Note", b =>
                 {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Organization", "Organization")
-                        .WithMany()
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -602,39 +642,15 @@ namespace BackendAPI.Migrations
                         .WithMany("Notes")
                         .HasForeignKey("UserId1");
 
-                    b.Navigation("Organization");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Organization", b =>
-                {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.User", "Creator")
+                    b.HasOne("BackendAPI.BE.DAL.Entities.Warehouse", "Warehouse")
                         .WithMany()
-                        .HasForeignKey("CreatorId")
+                        .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Creator");
-                });
-
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.OrganizationMember", b =>
-                {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Organization", "Organization")
-                        .WithMany("OrganizationMembers")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
-                        .WithMany("OrganizationMembers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Organization");
 
                     b.Navigation("User");
+
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.PasswordResetToken", b =>
@@ -646,13 +662,13 @@ namespace BackendAPI.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Product", b =>
                 {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Organization", "Organization")
+                    b.HasOne("BackendAPI.BE.DAL.Entities.Warehouse", "Warehouse")
                         .WithMany("Products")
-                        .HasForeignKey("OrganizationId")
+                        .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Organization");
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.ProductSupplier", b =>
@@ -706,32 +722,73 @@ namespace BackendAPI.Migrations
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Shift", b =>
                 {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Organization", "Organization")
-                        .WithMany("Shifts")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
                         .WithMany("Shifts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Organization");
+                    b.HasOne("BackendAPI.BE.DAL.Entities.Warehouse", "Warehouse")
+                        .WithMany("Shifts")
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("User");
+
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Supplier", b =>
                 {
-                    b.HasOne("BackendAPI.BE.DAL.Entities.Organization", "Organization")
+                    b.HasOne("BackendAPI.BE.DAL.Entities.Warehouse", "Warehouse")
                         .WithMany("Suppliers")
-                        .HasForeignKey("OrganizationId")
+                        .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Organization");
+                    b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.VerifyEmailToken", b =>
+                {
+                    b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
+                        .WithMany("VerifyEmailTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Warehouse", b =>
+                {
+                    b.HasOne("BackendAPI.BE.DAL.Entities.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.WarehouseStaff", b =>
+                {
+                    b.HasOne("BackendAPI.BE.DAL.Entities.User", "User")
+                        .WithMany("WarehouseStaffs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BackendAPI.BE.DAL.Entities.Warehouse", "Warehouse")
+                        .WithMany("WarehouseStaffs")
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.GoodsReceipt", b =>
@@ -743,17 +800,6 @@ namespace BackendAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Organization", b =>
-                {
-                    b.Navigation("OrganizationMembers");
-
-                    b.Navigation("Products");
-
-                    b.Navigation("Shifts");
-
-                    b.Navigation("Suppliers");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Product", b =>
@@ -778,13 +824,28 @@ namespace BackendAPI.Migrations
 
                     b.Navigation("Notes");
 
-                    b.Navigation("OrganizationMembers");
-
                     b.Navigation("PasswordResetTokens");
 
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("Shifts");
+
+                    b.Navigation("VerifyEmailTokens");
+
+                    b.Navigation("WarehouseStaffs");
+                });
+
+            modelBuilder.Entity("BackendAPI.BE.DAL.Entities.Warehouse", b =>
+                {
+                    b.Navigation("InfractionTickets");
+
+                    b.Navigation("Products");
+
+                    b.Navigation("Shifts");
+
+                    b.Navigation("Suppliers");
+
+                    b.Navigation("WarehouseStaffs");
                 });
 
             modelBuilder.Entity("BackendAPI.BE.DAL.Entities.DamageNote", b =>

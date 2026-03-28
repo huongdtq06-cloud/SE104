@@ -39,4 +39,13 @@ public class WarehouseController : ControllerBase
             return BadRequest(new { Success = false, Message = "Failed to invite staff." });
         return Ok(new { Success = true, Message = "Staff invited successfully." });
     }
+
+    [HttpPost("join")]
+    public async Task<IActionResult> joinWarehouse(CreateWarehouseDTO model)
+    {
+        var result = await _warehouseService.CreateWarehouseAsync(model);
+        if (!result)
+            return BadRequest(new { Success = false, Message = "Failed to create warehouse." });
+        return Ok(new { Success = true, Message = "Warehouse created successfully." });
+    }
 }

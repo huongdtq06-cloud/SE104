@@ -18,11 +18,12 @@ public class AuthController : ControllerBase
 
     public AuthController(IMapper mapper, IUserRepository userRepository
         ,IEmailService emailService, IRepository<PasswordResetToken> PasswordResetTokenRepository
+        ,IRepository<VerifyEmailToken> verifyEmailTokenRepository
         ,ITokenService tokenService, IRepository<RefreshToken> refreshTokenRepository
         ,IOTPRepository OTPRepository, IHttpContextAccessor httpContextAccessor)
     {        
         _authService = new AuthService(userRepository, OTPRepository
-            , PasswordResetTokenRepository, mapper, emailService, tokenService
+            , PasswordResetTokenRepository, verifyEmailTokenRepository, mapper, emailService, tokenService
             , refreshTokenRepository, httpContextAccessor);        
     }
 
@@ -46,8 +47,15 @@ public class AuthController : ControllerBase
     }
 
  
-    // [HttpPost("Verify-email")]
-    // public async Task<IActionResult> verifyEmail()
+    [HttpPost("verify-email")]
+    public async Task<IActionResult> verifyEmail(VerifyEmailDTO model)
+    {
+        var result = await _authService.VerifyEmailAsync(model);
+        if (!result)
+            return BadRequest(new { Success = false, Message = "Invalid or expired verify token." });
+
+        return Ok(new { Success = true });
+    }
 
     [HttpPost("ForgotPassword")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
